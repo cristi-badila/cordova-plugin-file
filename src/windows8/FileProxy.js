@@ -823,6 +823,13 @@ module.exports = {
                     );
                 }
             );
+        } else if (path.substr(0, 10) == "ms-appx://" || path.substr(0, 13) == "ms-appdata://") {
+            Windows.Storage.StorageFile.getFileFromApplicationUriAsync(new Windows.Foundation.Uri(path)).then(
+                function (storageFile) {
+                    success(new FileEntry(storageFile.name, storageFile.path));
+                }, function () {
+                    fail && fail(FileError.NOT_FOUND_ERR);
+                });
         } else {
             Windows.Storage.StorageFile.getFileFromPathAsync(path).then(
                 function (storageFile) {
